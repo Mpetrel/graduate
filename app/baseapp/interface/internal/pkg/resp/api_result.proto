@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package internal.pkg.resp;
+
+import "google/protobuf/any.proto";
+
+option go_package = "base-interface/internal/pkg/resp;resp";
+option java_multiple_files = true;
+option java_package = "internal.pkg.resp";
+
+message ApiResult {
+    int32 code = 1;
+    string message = 2;
+    google.protobuf.Any data = 3;
+}

@@ -1,0 +1,196 @@
+syntax = "proto3";
+
+package comment.service.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "base-service/api/comment/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.comment.service.v1";
+
+service Comment {
+    rpc CreateComment (CreateCommentRequest) returns (CreateCommentReply) {
+        option (google.api.http) = {
+            post: "/comment"
+            body: "*"
+        };
+    };
+
+
+    rpc LikeComment (LikeCommentRequest) returns (LikeCommentReply) {
+        option (google.api.http) = {
+            post: "/comment/like"
+            body: "*"
+        };
+    };
+    rpc DeleteComment (DeleteCommentRequest) returns (DeleteCommentReply) {
+        option (google.api.http) = {
+            delete: "/comment"
+        };
+    };
+
+    rpc ListComment (ListCommentRequest) returns (ListCommentReply) {
+        option (google.api.http) = {
+            get: "/comment/list"
+        };
+    };
+
+    rpc ListSubComment (ListSubCommentRequest) returns (ListCommentReply) {
+        option (google.api.http) = {
+            get: "/comment/sub/list"
+        };
+    }
+
+    rpc GetCommentSubject (GetCommentSubjectRequest) returns (GetCommentSubjectReply) {
+        option (google.api.http) = {
+            get: "/comment/subject"
+        };
+    };
+
+    rpc ListCommentSubject(ListCommentSubjectRequest) returns(ListCommentSubjectReply) {
+        option (google.api.http) = {
+            get: "/comment/subject/list"
+        };
+    };
+
+    rpc GetCommentLiked (GetCommentLikedRequest) returns (GetCommentLikedReply) {
+        option (google.api.http) = {
+            get: "/comment/liked"
+        };
+    }
+
+    rpc GetComment (GetCommentRequest) returns (GetCommentReply) {
+        option (google.api.http) = {
+            get: "/comment/{id}"
+        };
+    };
+}
+
+message CreateCommentRequest {
+    uint64 obj_id = 1;
+    int32 obj_type = 2;
+    uint64 member_id = 3;
+    uint64 root = 4;
+    uint64 parent = 5;
+    int32 state = 6;
+    string at_member_ids = 7;
+    string ip = 8;
+    int32 platform = 9;
+    string device = 10;
+    string message = 11;
+    string meta = 12;
+}
+message CreateCommentReply {
+    uint64 id = 1;
+}
+
+message GetCommentRequest {
+    uint64 id = 1;
+}
+
+message GetCommentReply {
+    CommentData comment = 1;
+}
+
+message LikeCommentRequest {
+    uint64 id = 1;
+    int32 like = 2;
+    uint64 member_id = 3;
+}
+message LikeCommentReply {}
+
+message DeleteCommentRequest {
+    uint64 id = 1;
+}
+message DeleteCommentReply {}
+
+message ListCommentRequest {
+    uint64 obj_id = 1;
+    int32 obj_type = 2;
+    int32 page = 4;
+    int32 size = 5;
+    int32 reply_count = 6;
+}
+message ListCommentReply {
+    repeated CommentData comments = 1;
+}
+
+message ListSubCommentRequest {
+    uint64 root_id = 3;
+    int32 page = 4;
+    int32 size = 5;
+}
+
+message CommentData {
+    uint64 id = 1;
+    uint64 member_id = 2;
+    uint64 root = 3;
+    uint64 parent = 4;
+    uint64 parent_member_id = 5;
+    int32 floor = 6;
+    int32 count = 7;
+    int32 root_count = 8;
+    int32 like = 9;
+    int32 hate = 10;
+    int32 state = 11;
+    string at_member_ids = 12;
+    string ip = 13;
+    int32 platform = 14;
+    string device = 15;
+    string message = 16;
+    string meta = 17;
+    int64 create_at = 18;
+    int64 updated_at = 19;
+    repeated CommentData replies = 20;
+}
+
+// 查询评论主题参数定义
+message GetCommentSubjectRequest {
+    uint64 obj_id = 1;
+    int32 obj_type = 2;
+}
+
+message GetCommentSubjectReply {
+    uint64 id = 1;
+    uint64 obj_id = 2;
+    int32 obj_type = 3;
+    uint64 member_id = 4;
+    int32 count = 5;
+    int32 root_count = 6;
+    int32 all_count = 7;
+    int32 state = 8;
+    int64 created_at = 9;
+}
+
+message ListCommentSubjectRequest {
+    repeated uint64 ids = 1;
+    int32 obj_type = 2;
+}
+
+message ListCommentSubjectReply {
+    message CommentSubject {
+        uint64 id = 1;
+        uint64 obj_id = 2;
+        int32 obj_type = 3;
+        uint64 member_id = 4;
+        int32 count = 5;
+        int32 root_count = 6;
+        int32 all_count = 7;
+        int32 state = 8;
+        int64 created_at = 9;
+    }
+    repeated CommentSubject comment_subjects = 1;
+}
+
+message GetCommentLikedRequest {
+    uint64 member_id = 1;
+    repeated uint64 comment_id = 2;
+}
+
+message GetCommentLikedReply {
+    message LikedItem {
+        uint64 comment_id = 1;
+        bool like = 2;
+    }
+    repeated LikedItem liked_items = 1;
+}

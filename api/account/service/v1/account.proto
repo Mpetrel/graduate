@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package account.service.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "base-service/api/account/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.account.service.v1";
+
+service Account {
+    rpc CreateAccount (CreateAccountRequest) returns (CreateAccountReply) {
+        option (google.api.http) = {
+            post: "/account"
+            body: "*"
+        };
+    };
+    rpc UpdateAccount (UpdateAccountRequest) returns (UpdateAccountReply) {
+        option (google.api.http) = {
+            put: "/account"
+            body: "*"
+        };
+    };
+    rpc DeleteAccount (DeleteAccountRequest) returns (DeleteAccountReply);
+    rpc GetAccount (GetAccountRequest) returns (GetAccountReply) {
+        option (google.api.http) = {
+          get: "/account/{id}"
+        };
+    };
+    rpc ListAccount (ListAccountRequest) returns (ListAccountReply);
+    rpc ListWithIds (ListWithIdsRequest) returns (ListWithIdsReply) {
+        option (google.api.http) = {
+            post: "/account/list/ids"
+            body: "*"
+        };
+    };
+    rpc EmailLogin (EmailLoginRequest) returns (AccountLoginReply) {
+        option (google.api.http) = {
+            post: "/account/login"
+            body: "*"
+        };
+    };
+}
+
+message CreateAccountRequest {
+    string email = 1;
+    string password = 2;
+    string nickname = 3;
+}
+
+message CreateAccountReply {
+    uint64 id = 1;
+}
+
+message UpdateAccountRequest {
+    uint64 id = 1;
+    string nickname = 2;
+    string password = 3;
+    string avatar = 4;
+}
+
+message UpdateAccountReply {}
+
+message DeleteAccountRequest {
+    uint64 id = 1;
+}
+message DeleteAccountReply {}
+
+message GetAccountRequest {
+    uint64 id = 1;
+}
+message GetAccountReply {
+    optional AccountInfo account = 1;
+}
+
+message ListAccountRequest {}
+message ListAccountReply {
+    repeated AccountInfo accounts = 1;
+}
+
+message ListWithIdsRequest {
+    repeated uint64 ids = 1;
+}
+
+message ListWithIdsReply {
+    repeated AccountInfo accounts = 1;
+}
+
+message EmailLoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message AccountLoginReply {
+    string token = 1;
+    AccountInfo account = 2;
+}
+
+
+message AccountInfo {
+    uint64 id = 1;
+    string nickname = 2;
+    string avatar = 3;
+    string email = 4;
+    int32 platform = 5;
+    string open_id = 6;
+    int32 state = 7;
+    int64 created_at = 8;
+}

@@ -1,0 +1,166 @@
+syntax = "proto3";
+
+package api.baseapp.interface.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "base-service/api/baseapp/interface/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.baseapp.interface.v1";
+
+service BaseappInterface {
+
+    rpc GetCommentSubject(GetCommentSubjectRequest) returns (GetCommentSubjectReply) {
+        option (google.api.http) = {
+            get: "/api/comment/subject"
+        };
+    }
+
+    rpc SaveComment(SaveCommentRequest) returns (SaveCommentReply) {
+        option (google.api.http) = {
+            post: "/api/comment"
+        };
+    };
+
+
+
+    rpc GetCommentList(GetCommentListRequest) returns (GetCommentListReply) {
+        option (google.api.http) = {
+            get: "/api/comment/list"
+        };
+    }
+
+    rpc GetReplyList(GetReplyListRequest) returns (GetCommentListReply) {
+        option (google.api.http) = {
+            get: "/api/comment/reply"
+        };
+    }
+
+    rpc GetComment(GetCommentRequest) returns (GetCommentReply) {
+        option (google.api.http) = {
+            get: "/api/comment/{id}"
+        };
+    }
+
+    rpc LikeComment(LikeCommentRequest) returns (LikeCommentReply) {
+        option (google.api.http) = {
+            post: "/api/comment/like/{id}"
+        };
+    }
+
+    rpc Login(LoginRequest) returns (LoginReply) {
+        option (google.api.http) = {
+            post: "/api/account/login"
+        };
+    }
+}
+
+
+message SaveCommentRequest {
+    uint64 obj_id = 1;
+    int32  obj_type = 2;
+    uint64 root = 4;
+    uint64 parent = 5;
+    string content = 6;
+    string meta = 7;
+}
+
+message GetCommentSubjectRequest {
+    uint64 obj_id = 1;
+    int32 obj_type = 2;
+}
+
+message GetCommentSubjectReply {
+    uint64 id = 1;
+    uint64 obj_id = 2;
+    int32 obj_type = 3;
+    uint64 member_id = 4;
+    int32 count = 5;
+    int32 root_count = 6;
+    int32 all_count = 7;
+    int32 state = 8;
+    int64 created_at = 9;
+}
+
+message SaveCommentReply {
+    uint64 id = 1;
+}
+
+message GetCommentRequest {
+    uint64 id = 1;
+}
+
+message GetCommentReply {
+    CommentData comment = 1;
+}
+
+message GetCommentListRequest {
+    uint64 obj_id = 1;
+    int32 obj_type = 2;
+    int32 page = 3;
+    int32 size = 4;
+    int32 reply = 5;
+}
+
+message GetCommentListReply {
+    repeated CommentData comments = 1;
+}
+
+message GetReplyListRequest {
+    uint64 root_id = 1;
+    int32 page = 2;
+    int32 size = 3;
+}
+
+message LikeCommentRequest {
+    uint64 id = 1;
+    int32 like = 2;
+}
+
+message LikeCommentReply {}
+
+message CommentData {
+    uint64 id = 1;
+    uint64 member_id = 2;
+    string nickname = 3;
+    string avatar = 4;
+    uint64 root = 5;
+    uint64 parent = 6;
+    uint64 parent_member_id = 7;
+    string parent_nickname = 8;
+    string parent_avatar = 9;
+    int32 floor = 10;
+    int32 count = 11;
+    int32 root_count = 12;
+    int32 like = 13;
+    bool liked = 14;
+    int32 hate = 15;
+    int32 state = 16;
+    string at_member_ids = 17;
+    string ip = 18;
+    int32 platform = 19;
+    string device = 20;
+    string message = 21;
+    string meta = 22;
+    int64 create_at = 23;
+    int64 updated_at = 24;
+    repeated CommentData replies = 25;
+}
+
+
+message LoginRequest {
+    string account = 1;
+    string password = 2;
+}
+
+message LoginReply {
+    string token = 1;
+    AccountInfo account = 2;
+}
+
+
+message AccountInfo {
+    uint64 id = 1;
+    string nickname = 2;
+    string avatar = 3;
+}
